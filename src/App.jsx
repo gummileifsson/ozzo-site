@@ -20,7 +20,7 @@ const SITE_CONFIG = {
   // image: paste a filename or URL for the hero background
   //        leave as "" to use the default mountain illustration
   hero: {
-    image: "/image/hero.jpg",                    // e.g. "hero-bg.jpg" or "https://yoursite.com/hero.jpg"
+    image: "/images/hero.jpg",                    // e.g. "hero-bg.jpg" or "https://yoursite.com/hero.jpg"
     headline: "We make your story",
     headlineAccent: "come alive",
     description: "Tailor-made cinematography, aerial filming, and post-production services. Based in Iceland, working worldwide.",
