@@ -226,13 +226,55 @@ const ICONS = {
 // Auto-detect YouTube or Vimeo from any URL format and return an embed URL
 function parseVideoUrl(url) {
   if (!url) return null;
-  // Vimeo: vimeo.com/123456 or player.vimeo.com/video/123456
   let match = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
   if (match) return `https://player.vimeo.com/video/${match[1]}?autoplay=1&title=0&byline=0&portrait=0`;
-  // YouTube: youtube.com/watch?v=ID or youtu.be/ID or youtube.com/embed/ID
   match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
   if (match) return `https://www.youtube.com/embed/${match[1]}?autoplay=1&rel=0`;
   return null;
+}
+
+// Get YouTube thumbnail (static URL, works instantly)
+function getYouTubeThumbnail(url) {
+  if (!url) return null;
+  const match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if (match) return `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`;
+  return null;
+}
+
+// Extract Vimeo ID from URL
+function getVimeoId(url) {
+  if (!url) return null;
+  const match = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  return match ? match[1] : null;
+}
+
+// Hook: auto-fetches video thumbnail from YouTube or Vimeo
+function useVideoThumbnail(videoUrl, skipFetch) {
+  const [thumb, setThumb] = useState(null);
+
+  useEffect(() => {
+    if (skipFetch || !videoUrl) return;
+
+    // YouTube: instant static URL
+    const ytThumb = getYouTubeThumbnail(videoUrl);
+    if (ytThumb) { setThumb(ytThumb); return; }
+
+    // Vimeo: fetch from their free oembed API (no key needed)
+    const vimeoId = getVimeoId(videoUrl);
+    if (vimeoId) {
+      fetch(`https://vimeo.com/api/oembed.json?url=https://vimeo.com/${vimeoId}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.thumbnail_url) {
+            const bigThumb = data.thumbnail_url.replace(/_\d+x\d+/, '_1280x720').replace(/\?.*$/, '');
+            setThumb(bigThumb);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [videoUrl, skipFetch]);
+
+  return thumb;
 }
 
 function VideoLightbox({ video, onClose }) {
@@ -260,6 +302,9 @@ function VideoLightbox({ video, onClose }) {
 function ParallaxCard({ project, className, style, onPlay }) {
   const ref = useRef(null);
   const [offset, setOffset] = useState(0);
+  const customImage = project.image && project.image.length > 0;
+  const hasVideo = project.video && project.video.length > 0;
+  const autoThumb = useVideoThumbnail(project.video, customImage);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -276,9 +321,8 @@ function ParallaxCard({ project, className, style, onPlay }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const hasImage = project.image && project.image.length > 0;
-  const hasVideo = project.video && project.video.length > 0;
-  const bg = hasImage ? undefined : `linear-gradient(180deg, ${project.colors.join(",")})`;
+  const displayImage = customImage ? project.image : autoThumb;
+  const bg = displayImage ? undefined : `linear-gradient(180deg, ${project.colors.join(",")})`;
 
   const handleClick = () => {
     if (hasVideo && onPlay) onPlay(project.video);
@@ -286,9 +330,9 @@ function ParallaxCard({ project, className, style, onPlay }) {
 
   return (
     <div ref={ref} className={className || "bento-card"} style={{ ...style, overflow: "hidden" }} onClick={handleClick}>
-      {hasImage ? (
+      {displayImage ? (
         <img
-          src={project.image}
+          src={displayImage}
           alt={project.title}
           className="parallax-bg parallax-img"
           style={{ transform: `translateY(${offset}px) scale(1.15)` }}
@@ -303,6 +347,20 @@ function ParallaxCard({ project, className, style, onPlay }) {
         <div className="bento-title">{project.title}</div>
         <div className="bento-meta">{project.category} · {project.year}</div>
       </div>
+    </div>
+  );
+}
+
+function ShowreelPoster({ video, thumbnail, duration }) {
+  const autoThumb = useVideoThumbnail(video, !!thumbnail);
+  const thumbSrc = thumbnail || autoThumb;
+  return (
+    <div className="showreel-poster">
+      {thumbSrc && <img src={thumbSrc} alt="Showreel" className="showreel-thumb" />}
+      <div className="showreel-play">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ededed" strokeWidth="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </div>
+      <span className="showreel-duration">{duration}</span>
     </div>
   );
 }
@@ -472,13 +530,7 @@ export default function OzzoWebsite() {
               title="Showreel"
             />
           ) : (
-            <div className="showreel-poster">
-              {C.showreel.thumbnail && <img src={C.showreel.thumbnail} alt="Showreel" className="showreel-thumb" />}
-              <div className="showreel-play">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ededed" strokeWidth="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              </div>
-              <span className="showreel-duration">{C.showreel.duration}</span>
-            </div>
+            <ShowreelPoster video={C.showreel.video} thumbnail={C.showreel.thumbnail} duration={C.showreel.duration} />
           )}
         </div>
       </div>
@@ -747,6 +799,7 @@ button { font-family:'Montserrat',sans-serif; }
   z-index:0;
 }
 .parallax-img {
+  position:absolute; inset:-20px;
   width:calc(100% + 40px); height:calc(100% + 40px);
   object-fit:cover;
   display:block;
