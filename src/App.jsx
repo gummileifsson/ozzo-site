@@ -35,9 +35,9 @@ const SITE_CONFIG = {
   //   "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
   // thumbnail: optional poster image shown before someone clicks play
   showreel: {
-    video: "https://vimeo.com/906691739",
+    video: "https://vimeo.com/224344845?fl=pl&fe=sh",
     thumbnail: "",                // e.g. "showreel-thumb.jpg"
-    title: "Showreel 2025",
+    title: "Showreel 2017",
     subtitle: "A curated selection of our finest cinematic work",
     duration: "2:30",
   },
@@ -145,8 +145,8 @@ const SITE_CONFIG = {
       category: "Cameras",
       count: "4 units",
       items: [
-        { name: "Sony FX6", image: "", spec: "Full-Frame Cinema · 4K 120fps · S-Cinetone", badge: "Primary Camera", details: ["Full-Frame 10.2MP Exmor R Sensor", "4K up to 120fps, 1080p 240fps", "S-Cinetone, S-Log3, 15+ stops DR", "Dual Base ISO 800 / 12800", "E-Mount, Electronic Variable ND"] },
-        { name: "RED Komodo 6K", image: "", spec: "Super 35 · 6K · Global Shutter · R3D", badge: "Cinema", details: ["Super 35 Global Shutter Sensor", "6K at 40fps, 4K at 60fps", "REDCODE RAW (R3D) recording", "16+ stops Dynamic Range", "Canon RF Mount, compact body"] },
+        { name: "Sony FX6", image: "/images/sonyfx6.webp", spec: "Full-Frame Cinema · 4K 120fps · S-Cinetone", badge: "Primary Camera", details: ["Full-Frame 10.2MP Exmor R Sensor", "4K up to 120fps, 1080p 240fps", "S-Cinetone, S-Log3, 15+ stops DR", "Dual Base ISO 800 / 12800", "E-Mount, Electronic Variable ND"] },
+        { name: "RED Komodo 6K", image: "/images/komodo6k.png", spec: "Super 35 · 6K · Global Shutter · R3D", badge: "Cinema", details: ["Super 35 Global Shutter Sensor", "6K at 40fps, 4K at 60fps", "REDCODE RAW (R3D) recording", "16+ stops Dynamic Range", "Canon RF Mount, compact body"] },
         { name: "Sony A7S III", image: "", spec: "Full-Frame · Low-Light Specialist", badge: "B-Cam", details: ["12.1MP Full-Frame Exmor R", "4K 120fps, 10-bit 4:2:2 internal", "ISO expandable to 409600", "5-Axis IBIS, no recording limit", "Dual CFexpress Type A slots"] },
         { name: "Blackmagic Pocket 6K Pro", image: "", spec: "Super 35 · BRAW · Built-in NDs", badge: "Compact", details: ["Super 35 HDR sensor", "6K at 50fps in Blackmagic RAW", "Built-in 2/4/6 stop ND filters", "EF Mount, 5\" HDR touchscreen", "DaVinci Resolve Studio included"] },
       ],
@@ -155,8 +155,8 @@ const SITE_CONFIG = {
       category: "Aerial Systems",
       count: "3 units",
       items: [
-        { name: "DJI Inspire 3", image: "", spec: "8K Full-Frame · Dual Operator", badge: "Flagship", details: ["Full-Frame 8K CinemaDNG RAW", "Zenmuse X9-8K Air Gimbal", "Waypoint Pro flight planning", "Dual operator control system", "28 min flight time, O3 Pro link"] },
-        { name: "DJI Mavic 3 Pro Cine", image: "", spec: "Hasselblad · Triple Lens · ProRes", badge: "Versatile", details: ["4/3 CMOS Hasselblad camera", "Triple lens: 24/70/166mm equiv.", "Apple ProRes 422 HQ internal", "43 min flight time", "Omnidirectional obstacle sensing"] },
+        { name: "DJI Inspire 3", image: "/images/inspire3.png", spec: "8K Full-Frame · Dual Operator", badge: "Flagship", details: ["Full-Frame 8K CinemaDNG RAW", "Zenmuse X9-8K Air Gimbal", "Waypoint Pro flight planning", "Dual operator control system", "28 min flight time, O3 Pro link"] },
+        { name: "DJI Mavic 4 Pro", image: "/images/mavic4pro.png", spec: "Hasselblad · Triple Lens · ProRes", badge: "Versatile", details: ["4/3 CMOS Hasselblad camera", "Triple lens: 24/70/166mm equiv.", "ALL-I internal", "53 min flight time", "Omnidirectional obstacle sensing"] },
         { name: "DJI FPV Combo", image: "", spec: "4K 120fps · Immersive POV", badge: "FPV", details: ["4K at 120fps, 150° super-wide FOV", "0-100 km/h in 2 seconds", "Motion controller + goggles", "RockSteady EIS stabilization", "20 min flight, 140 km/h max"] },
       ],
     },
@@ -164,8 +164,8 @@ const SITE_CONFIG = {
       category: "Lenses",
       count: "3 units",
       items: [
-        { name: "Sony 24-70mm f/2.8 GM II", image: "", spec: "E-Mount · Nano AR II Coating", badge: "Workhorse", details: ["Constant f/2.8 aperture", "Nano AR Coating II, XA elements", "Weather sealed, 695g", "Linear response MF, 4 XD motors", "Versatile zoom for all situations"] },
-        { name: "Sony 16-35mm f/2.8 GM", image: "", spec: "Ultra-Wide · Landscapes & Interiors", badge: "Wide", details: ["Ultra-wide constant f/2.8", "Nano AR coating, XA element", "Dust and moisture resistant", "Ideal for landscapes and astro", "680g, 0.28m minimum focus"] },
+        { name: "Sony 24-70mm f/2.8 GM II", image: "/images/2470lens.webp", spec: "E-Mount · Nano AR II Coating", badge: "Workhorse", details: ["Constant f/2.8 aperture", "Nano AR Coating II, XA elements", "Weather sealed, 695g", "Linear response MF, 4 XD motors", "Versatile zoom for all situations"] },
+        { name: "Sony 16-35mm f/2.8 GM", image: "/images/1635lens.webp", spec: "Ultra-Wide · Landscapes & Interiors", badge: "Wide", details: ["Ultra-wide constant f/2.8", "Nano AR coating, XA element", "Dust and moisture resistant", "Ideal for landscapes and astro", "680g, 0.28m minimum focus"] },
         { name: "Sigma 85mm f/1.4 DG DN Art", image: "", spec: "Portrait · Cinematic Bokeh", badge: "Prime", details: ["f/1.4 maximum aperture", "14 elements in 11 groups", "Hypersonic AF motor", "Gorgeous rendering and bokeh", "E-Mount native, 630g"] },
       ],
     },
@@ -173,8 +173,8 @@ const SITE_CONFIG = {
       category: "Support & Audio",
       count: "4 units",
       items: [
-        { name: "DJI Ronin 4D", image: "", spec: "4-Axis · LiDAR AF · Wireless", badge: "Stabilizer", details: ["4-Axis cinema stabilization", "LiDAR range finder for AF", "Wireless video TX built-in", "6K ProRes / RAW recording", "Z-Axis optional for vehicle work"] },
-        { name: "Sennheiser MKE 600", image: "", spec: "Shotgun · Super-Cardioid", badge: "Shotgun", details: ["Super-cardioid/lobar pickup", "Low self-noise: 15 dBA", "Switchable low-cut filter", "Phantom or AA battery powered", "Rugged, weather-resistant build"] },
+        { name: "DJI Ronin 4D-6K", image: "/images/ronin4d.png", spec: "4-Axis · LiDAR AF · Wireless", badge: "Stabilizer", details: ["4-Axis cinema stabilization", "LiDAR range finder for AF", "Wireless video TX built-in", "6K ProRes / RAW recording", "Z-Axis optional for vehicle work"] },
+        { name: "Sennheiser MKE 600", image: "/images/senheisermic.png", spec: "Shotgun · Super-Cardioid", badge: "Shotgun", details: ["Super-cardioid/lobar pickup", "Low self-noise: 15 dBA", "Switchable low-cut filter", "Phantom or AA battery powered", "Rugged, weather-resistant build"] },
         { name: "Røde Wireless PRO", image: "", spec: "Dual Channel · 32-bit Float", badge: "Wireless", details: ["Dual channel wireless system", "32-bit float onboard recording", "260m line-of-sight range", "GainAssist intelligent leveling", "7-hour battery per transmitter"] },
         { name: "Zoom F6 Field Recorder", image: "", spec: "6-Input · 32-bit Float · Dual SD", badge: "Recorder", details: ["6x inputs, 14x tracks", "32-bit float — no clipping ever", "Dual SD card slots", "Timecode in/out", "Ultra-compact field format"] },
       ],
