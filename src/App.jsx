@@ -20,7 +20,7 @@ const SITE_CONFIG = {
   // image: paste a filename or URL for the hero background
   //        leave as "" to use the default mountain illustration
   hero: {
-    image: "",                    // e.g. "hero-bg.jpg" or "https://yoursite.com/hero.jpg"
+    image: "hero.jpg",                    // e.g. "hero-bg.jpg" or "https://yoursite.com/hero.jpg"
     headline: "We make your story",
     headlineAccent: "come alive",
     description: "Tailor-made cinematography, aerial filming, and post-production services. Based in Iceland, working worldwide.",
@@ -62,39 +62,39 @@ const SITE_CONFIG = {
   //          "https://youtu.be/dQw4w9WgXcQ"
   projects: [
     {
-      title: "Highland Horizons",
+      title: "#StepOnEarth - Turkish Airlines",
       image: "",                  // e.g. "highland-horizons.jpg"
-      video: "",                  // e.g. "https://vimeo.com/123456789"
-      category: "Aerial · Nature Documentary",
-      tags: ["aerial", "nature"],
-      year: "2025",
+      video: "https://www.youtube.com/watch?v=_fPV05xpVZE",                  // e.g. ""
+      category: "Aerial · Commercial",
+      tags: ["aerial", "commercial"],
+      year: "2019",
       featured: true,
       colors: ["#1a3045", "#2a5545", "#1a3020"],
     },
     {
-      title: "Arctic Blue",
+      title: "Beats by Dre | Zero Dark Project ",
       image: "",
-      video: "",
+      video: "https://www.youtube.com/watch?v=4te140PZ3Ho",
       category: "Brand Film · Commercial",
       tags: ["commercial"],
       year: "2024",
       colors: ["#0e2535", "#1a4055", "#0e2535"],
     },
     {
-      title: "Volcanic Light",
+      title: "Katrin Intro",
       image: "",
-      video: "",
-      category: "Nature · Time-lapse",
+      video: "https://vimeo.com/341573011?fl=pl&fe=vl",
+      category: "Nature · Commercial",
       tags: ["nature"],
       year: "2024",
       colors: ["#1a1215", "#3a1a10", "#1a0e08"],
     },
     {
-      title: "Norðurljós Tours",
+      title: "Major Lazer - Cold Water",
       image: "",
-      video: "",
-      category: "Tourism · Commercial",
-      tags: ["commercial"],
+      video: "https://www.youtube.com/watch?v=nBtDsQ4fhXY&t=1s",
+      category: "Music Video",
+      tags: ["music_video"],
       year: "2024",
       colors: ["#0a1520", "#0c1a28", "#0a1015"],
     },
