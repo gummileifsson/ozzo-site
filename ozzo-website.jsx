@@ -236,12 +236,12 @@ function parseVideoUrl(url) {
 // Auto-grab thumbnail from YouTube or Vimeo URL (no API key needed)
 function getVideoThumbnail(url) {
   if (!url) return null;
-  // YouTube — free thumbnail at img.youtube.com
+  // YouTube — hqdefault works for all videos, maxresdefault doesn't always exist
   let match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-  if (match) return `https://img.youtube.com/vi/${match[1]}/maxresdefault.jpg`;
-  // Vimeo — use vumbnail.com (free, no API key)
+  if (match) return `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`;
+  // Vimeo — vumbnail.com free service, use _large for better quality
   match = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
-  if (match) return `https://vumbnail.com/${match[1]}.jpg`;
+  if (match) return `https://vumbnail.com/${match[1]}_large.jpg`;
   return null;
 }
 
@@ -762,6 +762,7 @@ button { font-family:'Montserrat',sans-serif; }
   z-index:0;
 }
 .parallax-img {
+  position:absolute; inset:-20px;
   width:calc(100% + 40px); height:calc(100% + 40px);
   object-fit:cover;
   display:block;
