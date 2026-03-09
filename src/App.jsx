@@ -94,7 +94,7 @@ const SITE_CONFIG = {
       image: "",
       video: "https://www.youtube.com/watch?v=nBtDsQ4fhXY&t=1s",
       category: "Music Video",
-      tags: ["music_video"],
+      tags: ["music video"],
       year: "2024",
       colors: ["#0a1520", "#0c1a28", "#0a1015"],
     },

@@ -233,16 +233,50 @@ function parseVideoUrl(url) {
   return null;
 }
 
-// Auto-grab thumbnail from YouTube or Vimeo URL (no API key needed)
-function getVideoThumbnail(url) {
+// Get YouTube thumbnail instantly (static URL, always works)
+// For Vimeo, returns null — we fetch async instead
+function getYouTubeThumbnail(url) {
   if (!url) return null;
-  // YouTube — hqdefault works for all videos, maxresdefault doesn't always exist
-  let match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  const match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
   if (match) return `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`;
-  // Vimeo — vumbnail.com free service, use _large for better quality
-  match = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
-  if (match) return `https://vumbnail.com/${match[1]}_large.jpg`;
   return null;
+}
+
+// Extract Vimeo ID from URL
+function getVimeoId(url) {
+  if (!url) return null;
+  const match = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  return match ? match[1] : null;
+}
+
+// Hook: fetches Vimeo thumbnail via their free oembed API (no key needed)
+function useVideoThumbnail(videoUrl, customImage) {
+  const [thumb, setThumb] = useState(null);
+
+  useEffect(() => {
+    if (customImage || !videoUrl) return;
+
+    // YouTube: instant, no fetch needed
+    const ytThumb = getYouTubeThumbnail(videoUrl);
+    if (ytThumb) { setThumb(ytThumb); return; }
+
+    // Vimeo: fetch from oembed API
+    const vimeoId = getVimeoId(videoUrl);
+    if (vimeoId) {
+      fetch(`https://vimeo.com/api/oembed.json?url=https://vimeo.com/${vimeoId}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.thumbnail_url) {
+            // Replace size suffix to get a larger thumbnail
+            const bigThumb = data.thumbnail_url.replace(/_\d+x\d+/, '_1280x720').replace(/\?.*$/, '');
+            setThumb(bigThumb);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [videoUrl, customImage]);
+
+  return thumb;
 }
 
 function VideoLightbox({ video, onClose }) {
@@ -270,6 +304,9 @@ function VideoLightbox({ video, onClose }) {
 function ParallaxCard({ project, className, style, onPlay }) {
   const ref = useRef(null);
   const [offset, setOffset] = useState(0);
+  const customImage = project.image && project.image.length > 0;
+  const hasVideo = project.video && project.video.length > 0;
+  const autoThumb = useVideoThumbnail(project.video, customImage);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -286,10 +323,6 @@ function ParallaxCard({ project, className, style, onPlay }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Priority: custom image > auto video thumbnail > gradient fallback
-  const customImage = project.image && project.image.length > 0;
-  const hasVideo = project.video && project.video.length > 0;
-  const autoThumb = !customImage && hasVideo ? getVideoThumbnail(project.video) : null;
   const displayImage = customImage ? project.image : autoThumb;
   const bg = displayImage ? undefined : `linear-gradient(180deg, ${project.colors.join(",")})`;
 
@@ -316,6 +349,20 @@ function ParallaxCard({ project, className, style, onPlay }) {
         <div className="bento-title">{project.title}</div>
         <div className="bento-meta">{project.category} · {project.year}</div>
       </div>
+    </div>
+  );
+}
+
+function ShowreelPoster({ video, thumbnail, duration }) {
+  const autoThumb = useVideoThumbnail(video, !!thumbnail);
+  const thumbSrc = thumbnail || autoThumb;
+  return (
+    <div className="showreel-poster">
+      {thumbSrc && <img src={thumbSrc} alt="Showreel" className="showreel-thumb" />}
+      <div className="showreel-play">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ededed" strokeWidth="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </div>
+      <span className="showreel-duration">{duration}</span>
     </div>
   );
 }
@@ -485,15 +532,7 @@ export default function OzzoWebsite() {
               title="Showreel"
             />
           ) : (
-            <div className="showreel-poster">
-              {(C.showreel.thumbnail || getVideoThumbnail(C.showreel.video)) && (
-                <img src={C.showreel.thumbnail || getVideoThumbnail(C.showreel.video)} alt="Showreel" className="showreel-thumb" />
-              )}
-              <div className="showreel-play">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ededed" strokeWidth="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              </div>
-              <span className="showreel-duration">{C.showreel.duration}</span>
-            </div>
+            <ShowreelPoster video={C.showreel.video} thumbnail={C.showreel.thumbnail} duration={C.showreel.duration} />
           )}
         </div>
       </div>
