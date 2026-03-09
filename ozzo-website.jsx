@@ -226,12 +226,22 @@ const ICONS = {
 // Auto-detect YouTube or Vimeo from any URL format and return an embed URL
 function parseVideoUrl(url) {
   if (!url) return null;
-  // Vimeo: vimeo.com/123456 or player.vimeo.com/video/123456
   let match = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
   if (match) return `https://player.vimeo.com/video/${match[1]}?autoplay=1&title=0&byline=0&portrait=0`;
-  // YouTube: youtube.com/watch?v=ID or youtu.be/ID or youtube.com/embed/ID
   match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
   if (match) return `https://www.youtube.com/embed/${match[1]}?autoplay=1&rel=0`;
+  return null;
+}
+
+// Auto-grab thumbnail from YouTube or Vimeo URL (no API key needed)
+function getVideoThumbnail(url) {
+  if (!url) return null;
+  // YouTube — free thumbnail at img.youtube.com
+  let match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if (match) return `https://img.youtube.com/vi/${match[1]}/maxresdefault.jpg`;
+  // Vimeo — use vumbnail.com (free, no API key)
+  match = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  if (match) return `https://vumbnail.com/${match[1]}.jpg`;
   return null;
 }
 
@@ -276,9 +286,12 @@ function ParallaxCard({ project, className, style, onPlay }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const hasImage = project.image && project.image.length > 0;
+  // Priority: custom image > auto video thumbnail > gradient fallback
+  const customImage = project.image && project.image.length > 0;
   const hasVideo = project.video && project.video.length > 0;
-  const bg = hasImage ? undefined : `linear-gradient(180deg, ${project.colors.join(",")})`;
+  const autoThumb = !customImage && hasVideo ? getVideoThumbnail(project.video) : null;
+  const displayImage = customImage ? project.image : autoThumb;
+  const bg = displayImage ? undefined : `linear-gradient(180deg, ${project.colors.join(",")})`;
 
   const handleClick = () => {
     if (hasVideo && onPlay) onPlay(project.video);
@@ -286,9 +299,9 @@ function ParallaxCard({ project, className, style, onPlay }) {
 
   return (
     <div ref={ref} className={className || "bento-card"} style={{ ...style, overflow: "hidden" }} onClick={handleClick}>
-      {hasImage ? (
+      {displayImage ? (
         <img
-          src={project.image}
+          src={displayImage}
           alt={project.title}
           className="parallax-bg parallax-img"
           style={{ transform: `translateY(${offset}px) scale(1.15)` }}
@@ -473,7 +486,9 @@ export default function OzzoWebsite() {
             />
           ) : (
             <div className="showreel-poster">
-              {C.showreel.thumbnail && <img src={C.showreel.thumbnail} alt="Showreel" className="showreel-thumb" />}
+              {(C.showreel.thumbnail || getVideoThumbnail(C.showreel.video)) && (
+                <img src={C.showreel.thumbnail || getVideoThumbnail(C.showreel.video)} alt="Showreel" className="showreel-thumb" />
+              )}
               <div className="showreel-play">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ededed" strokeWidth="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
               </div>
